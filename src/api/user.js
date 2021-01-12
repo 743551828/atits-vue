@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function login(data) {
   return request({
-    url: '/vue-admin-template/user/login',
+    url: '/security/sec/auth/v1/login-dev',
     method: 'post',
     data
   })

@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       title: '', //安徽省现代农业产业技术体系
-      logo: require("@/assets/logo.png")
+      logo: require("@/assets/images/logo.png")
     }
   }
 }

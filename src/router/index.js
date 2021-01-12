@@ -7,6 +7,12 @@ import Layout from '@/layout'
 
 export const constantRoutes = [
   {
+    path: '/login',
+    component: () => import('@/views/Login'),
+    hidden: true
+  },
+
+  {
     path: '/',
     component: Layout,
     redirect: '/Home',

@@ -1,6 +1,8 @@
 import Cookies from 'js-cookie'
+import defaultSettings from '@/settings.js'
 
-const TokenKey = 'vue_admin_template_token'
+
+const TokenKey = defaultSettings.tokenKey
 
 export function getToken() {
   return Cookies.get(TokenKey)
