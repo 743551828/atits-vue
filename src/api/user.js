@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function login(data) {
   return request({
-    url: '/security/sec/auth/v1/login-dev',
+    url: '/sec/auth/v1/login-dev',
     method: 'post',
     data
   })
@@ -10,9 +10,8 @@ export function login(data) {
 
 export function getInfo(token) {
   return request({
-    url: '/vue-admin-template/user/info',
-    method: 'get',
-    params: { token }
+    url: `/sec/auth/get/user/info/${token}`,
+    method: 'get'
   })
 }
 
