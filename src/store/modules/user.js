@@ -69,17 +69,16 @@ const actions = {
         }
         console.log(data);
 
-        const info = data
         const username = data.username
         const userCode = data.code
-        const isAdmin = data.isAdmin
-        const userDepartmentRole = data.userDepartmentRoleVoList
-        const resourceTree = data.resourceTreeVoList
+        // const isAdmin = data.isAdmin
+        // const userDepartmentRole = data.userDepartmentRoleVoList
+        // const resourceTree = data.resourceTreeVoList
         commit('SET_USER_CODE', userCode)
         commit('SET_USERNAME', username)
-        commit('SET_IS_ADMIN', isAdmin)
-        commit('SET_USER_DEPARTMENT_ROLE', userDepartmentRole)
-        commit('SET_RESOURCE_TREE', resourceTree)
+        // commit('SET_IS_ADMIN', isAdmin)
+        // commit('SET_USER_DEPARTMENT_ROLE', userDepartmentRole)
+        // commit('SET_RESOURCE_TREE', resourceTree)
         resolve(data)
       }).catch(error => {
         reject(error)

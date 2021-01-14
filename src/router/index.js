@@ -3,7 +3,6 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-import Layout from '@/layout'
 
 export const constantRoutes = [
   {
@@ -14,7 +13,7 @@ export const constantRoutes = [
 
   {
     path: '/',
-    component: Layout,
+    component: () => import('@/layout'),
     redirect: '/Home',
     children: [{
       path: 'Home',
@@ -25,7 +24,7 @@ export const constantRoutes = [
   },
   {
     path: '/Management',
-    component: Layout,
+    component: () => import('@/layout'),
     redirect: '/Management/UserManagement',
     name: 'Management',
     meta: { title: '运维系统', icon: 'el-icon-setting' },
