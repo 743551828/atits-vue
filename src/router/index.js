@@ -52,7 +52,14 @@ export const constantRoutes = [
         name: 'ResourceManagement',
         component: () => import('@/views/Management/ResourceManagement'),
         meta: { title: '权限管理', icon: 'el-icon-s-data' }
+      },
+      {
+        path: 'DepartmentLevelManagement',
+        name: 'DepartmentLevelManagement',
+        component: () => import('@/views/Management/DepartmentLevelManagement'),
+        meta: { title: '组织层级管理', icon: 'el-icon-office-building' }
       }
+      
     ]
   }
 

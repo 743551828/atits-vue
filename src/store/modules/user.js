@@ -1,10 +1,12 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import { info } from 'autoprefixer'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
+    info: '',
     userCode: '',
     username: '',
     isAdmin: '',
@@ -67,13 +69,14 @@ const actions = {
         if (!data) {
           return reject('token无效，请重新登录')
         }
-        console.log(data);
+        // console.log(data);
 
         const username = data.username
         const userCode = data.code
         // const isAdmin = data.isAdmin
         // const userDepartmentRole = data.userDepartmentRoleVoList
         // const resourceTree = data.resourceTreeVoList
+        commit('SET_INFO', info)
         commit('SET_USER_CODE', userCode)
         commit('SET_USERNAME', username)
         // commit('SET_IS_ADMIN', isAdmin)

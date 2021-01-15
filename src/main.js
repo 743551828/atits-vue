@@ -12,6 +12,8 @@ import App from './App'
 import store from './store'
 import router from './router'
 
+import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, download, handleTree } from "@/utils/commonUtils";
+
 import '@/icons' // icon
 import '@/permission' // permission control
 
@@ -27,6 +29,17 @@ import '@/permission' // permission control
 //   const { mockXHR } = require('../mock')
 //   mockXHR()
 // }
+
+// 全局方法挂载
+Vue.prototype.parseTime = parseTime
+Vue.prototype.resetForm = resetForm
+Vue.prototype.addDateRange = addDateRange
+Vue.prototype.selectDictLabel = selectDictLabel
+Vue.prototype.selectDictLabels = selectDictLabels
+Vue.prototype.download = download
+Vue.prototype.handleTree = handleTree
+
+
 
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
