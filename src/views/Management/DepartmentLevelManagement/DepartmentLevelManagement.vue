@@ -18,10 +18,8 @@
       style="width: 100%"
       row-key="code"
       border
-      lazy
       ref="table"
-      :load="getChildren"
-      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+      default-expand-all
     >
       <el-table-column sortable prop="name" label="名称"> </el-table-column>
       <el-table-column
@@ -69,7 +67,7 @@
           <el-button type="success" size="mini" @click="handleUpdate(row)">
             修改
           </el-button>
-          <el-button type="danger" size="mini" @click="handleDelete(row.code)">
+          <el-button type="danger" size="mini" @click="handleDelete(row)">
             删除
           </el-button>
         </template>
@@ -92,7 +90,7 @@
           <el-input v-model="temp.parentCode" />
         </el-form-item>
         <el-form-item
-          v-if="temp.parentName !== ''"
+          v-if="temp.parentName !== '' && temp.parentName !== null"
           label="父组织层级"
           prop="parentName"
         >
@@ -136,7 +134,12 @@
   </div>
 </template>
 <script>
-import { getChildrenList as childrenList, save } from "@/api/departmentLevel";
+import {
+  findAll,
+  save,
+  update,
+  deleteByRecursion,
+} from "@/api/departmentLevel";
 
 export default {
   data() {
@@ -149,8 +152,6 @@ export default {
       dialogFormVisible: false,
       //模态框类型(新增、添加、更新)
       dialogStatus: "",
-      //节点缓存
-      maps: new Map(),
       //模态框数据
       temp: {
         code: "",
@@ -167,22 +168,13 @@ export default {
     };
   },
   created() {
-    this.getList("-1");
+    this.getList();
   },
   methods: {
-    getChildren(tree, treeNode, resolve) {
-      // 将当前选中节点数据存储到map中
-      const { code } = tree;
-      this.maps.set(code, { tree, treeNode, resolve });
-      childrenList(code).then((response) => {
-        const { data } = response;
-        resolve(data);
-      });
-    },
     /** 查询组织层级列表 */
-    getList(parentCode) {
+    getList() {
       this.loading = true;
-      childrenList(parentCode).then((response) => {
+      findAll().then((response) => {
         const { data } = response;
         this.tableData = data;
         this.loading = false;
@@ -219,7 +211,7 @@ export default {
       });
     },
     handleUpdate(row) {
-      this.resetTemp();
+      this.temp = row;
       this.dialogStatus = "修改";
       this.dialogFormVisible = true;
       this.temp.code = row.code;
@@ -228,9 +220,27 @@ export default {
         this.$refs["dataForm"].clearValidate();
       });
     },
-    handleDelete(code) {},
+    handleDelete(row) {
+      console.log(row);
+      this.$confirm('是否确认删除部门层级："' + row.name + '"?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
+          return deleteByRecursion([row.code]);
+        })
+        .then(() => {
+          this.getList();
+          this.$notify({
+            title: "成功",
+            message: "删除成功",
+            type: "success",
+            duration: 2000,
+          });
+        });
+    },
     createData(dialogStatus) {
-      console.log("createData");
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
           save(this.temp).then(() => {
@@ -241,31 +251,26 @@ export default {
               type: "success",
               duration: 2000,
             });
-            if (dialogStatus === "新增") {
-              this.getList("-1");
-            } else {
-              this.refreshRow(this.temp.parentCode);
-            }
+            this.getList();
           });
         }
       });
     },
     updateData() {
-      console.log("updateData");
-    },
-    refreshRow(parentCode) {
-      if (this.maps.get(parentCode)) {
-        const { tree, treeNode, resolve } = this.maps.get(parentCode);
-        console.log("sadsad");
-        this.$set(
-          this.$refs.table.store.states.lazyTreeNodeMap,
-          parentCode,
-          []
-        );
-        if (tree) {
-          this.getChildren(tree, treeNode, resolve);
+      this.$refs["dataForm"].validate((valid) => {
+        if (valid) {
+          update(this.temp).then(() => {
+            this.dialogFormVisible = false;
+            this.$notify({
+              title: "成功",
+              message: "修改成功",
+              type: "success",
+              duration: 2000,
+            });
+            this.getList();
+          });
         }
-      }
+      });
     },
   },
 };
