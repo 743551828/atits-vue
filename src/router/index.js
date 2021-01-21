@@ -42,16 +42,16 @@ export const constantRoutes = [
         meta: { title: '角色管理', icon: 'el-icon-user' }
       },
       {
-        path: 'MenuManagement',
-        name: 'MenuManagement',
-        component: () => import('@/views/Management/MenuManagement'),
-        meta: { title: '菜单管理', icon: 'el-icon-menu' }
-      },
-      {
         path: 'ResourceManagement',
         name: 'ResourceManagement',
         component: () => import('@/views/Management/ResourceManagement'),
-        meta: { title: '权限管理', icon: 'el-icon-s-data' }
+        meta: { title: '菜单管理', icon: 'el-icon-menu' }
+      },
+      {
+        path: 'PermissionManagement',
+        name: 'PermissionManagement',
+        component: () => import('@/views/Management/PermissionManagement'),
+        meta: { title: '数据权限管理', icon: 'el-icon-s-data' }
       },
       {
         path: 'DepartmentLevelManagement',

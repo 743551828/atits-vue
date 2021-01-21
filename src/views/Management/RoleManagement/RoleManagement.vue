@@ -129,7 +129,7 @@
           <el-input
             type="textarea"
             v-model="temp.remark"
-            placeholder="组织层级名称"
+            placeholder="请输入备注"
           />
         </el-form-item>
       </el-form>

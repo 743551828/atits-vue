@@ -70,10 +70,13 @@ const actions = {
           return reject('token无效，请重新登录')
         }
         // console.log(data);
+        const isAdmin = data.isAdmin
+        if (isAdmin !== 1){
+          return reject('当前用户不是管理员，请重新登录')
+        }
 
         const username = data.username
         const userCode = data.code
-        // const isAdmin = data.isAdmin
         // const userDepartmentRole = data.userDepartmentRoleVoList
         // const resourceTree = data.resourceTreeVoList
         commit('SET_INFO', info)
