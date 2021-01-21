@@ -13,6 +13,7 @@ import store from './store'
 import router from './router'
 
 import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, download, handleTree } from "@/utils/commonUtils";
+import Pagination from "@/components/Pagination";
 
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -39,6 +40,8 @@ Vue.prototype.selectDictLabels = selectDictLabels
 Vue.prototype.download = download
 Vue.prototype.handleTree = handleTree
 
+// 全局组件挂载
+Vue.component('Pagination', Pagination)
 
 
 // set ElementUI lang to EN
