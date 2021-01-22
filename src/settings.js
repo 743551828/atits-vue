@@ -19,7 +19,7 @@ module.exports = {
    * http://127.0.0.1:30001
    * 后台接口base-api
    */
-  baseApi: 'http://127.0.0.1:30001',
+  baseApi: 'http://47.111.141.192:30001',
 
   /**
    * 端口

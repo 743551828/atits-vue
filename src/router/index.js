@@ -59,7 +59,19 @@ export const constantRoutes = [
         component: () => import('@/views/Management/DepartmentLevelManagement'),
         meta: { title: '组织层级管理', icon: 'el-icon-office-building' }
       }
-      
+
+    ]
+  },
+  {
+    path: '/Monitor',
+    component: () => import('@/layout'),
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/Monitor'),
+        name: 'Monitor',
+        meta: { title: '监控中心', icon: 'el-icon-s-platform' }
+      }
     ]
   }
 
