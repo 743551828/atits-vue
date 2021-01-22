@@ -63,10 +63,16 @@
           <el-table-column
             label="操作"
             align="center"
-            width="230"
+            width="300"
             class-name="small-padding fixed-width"
           >
             <template slot-scope="{ row }">
+              <el-button
+                type="primary"
+                size="mini"
+                @click="handlePermissionRelate(row)"
+                >数据权限</el-button
+              >
               <el-button type="success" size="mini" @click="handleUpdate(row)">
                 修改
               </el-button>
@@ -147,6 +153,37 @@
         </el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="数据权限" :visible.sync="relatePermissionVisible">
+      <el-table
+        ref="permissionTable"
+        v-loading="permissionLoading"
+        :data="permissionData"
+        style="width: 100%"
+        @select="handleSelect"
+        :row-class-name="tableRowClassName"
+        :row-key="
+          (row) => {
+            return row.code;
+          }
+        "
+      >
+        <el-table-column type="selection" width="55" prop="hasThisPermission">
+        </el-table-column>
+        <el-table-column prop="name" label="名称"> </el-table-column>
+        <el-table-column prop="flag" label="标识"> </el-table-column>
+      </el-table>
+      <pagination
+        v-show="permissionTotal > 0"
+        :total="permissionTotal"
+        :page.sync="permissionCurrentPage"
+        :limit.sync="permissionQueryParams.size"
+        @pagination="getPermissionData"
+      />
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="relatePermissionVisible = false"> 关闭 </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -158,12 +195,17 @@ import {
   save,
   update,
 } from "@/api/role";
+import { findByRoleCode, turn } from "@/api/permission";
 
 export default {
   data() {
     return {
       // 遮罩层
       loading: true,
+      // 权限表遮罩层
+      permissionLoading: true,
+      // 关联模态框是否显示
+      relatePermissionVisible: false,
       //模态框是否显示
       dialogFormVisible: false,
       //模态框类型(新增、更新)
@@ -173,6 +215,10 @@ export default {
       // 部门层级名称
       departmentLevelName: undefined,
       departmentLevelCodes: [],
+      // 权限数据
+      permissionData: [],
+      // 权限数据总数
+      permissionTotal: 0,
       props: {
         label: "name",
       },
@@ -181,6 +227,19 @@ export default {
         departmentLevelCode: "",
         page: 0,
         size: 5,
+      },
+      // 权限查询参数
+      permissionQueryParams: {
+        nameLike: "string",
+        roleCode: "",
+        page: 0,
+        size: 5,
+        sort: [
+          {
+            direction: "",
+            sortName: "sortNum",
+          },
+        ],
       },
       temp: {
         code: "",
@@ -209,6 +268,14 @@ export default {
       set(newValue) {
         this.departmentLevelCodes = newValue;
         this.temp.departmentLevelCode = newValue[newValue.length - 1];
+      },
+    },
+    permissionCurrentPage: {
+      get() {
+        return this.permissionQueryParams.page + 1;
+      },
+      set(newValue) {
+        this.permissionQueryParams.page = newValue - 1;
       },
     },
     currentPage: {
@@ -278,6 +345,44 @@ export default {
         this.$refs["dataForm"].clearValidate();
       });
     },
+    getPermissionData() {
+      this.permissionLoading = true;
+      findByRoleCode(this.permissionQueryParams)
+        .then((response) => {
+          this.permissionData = response.data.data;
+          this.permissionTotal = response.data.count;
+        })
+        .then(() => {
+          this.permissionData.forEach((row) => {
+            this.$refs.permissionTable.toggleRowSelection(
+              row,
+              row.hasThisPermission
+            );
+          });
+          this.permissionLoading = false;
+        });
+    },
+    handlePermissionRelate(row) {
+      this.relatePermissionVisible = true;
+      this.permissionQueryParams.roleCode = row.code;
+      this.permissionQueryParams.nameLike = "";
+      this.getPermissionData();
+    },
+    handleSelect(rowList, row) {
+      let data = {
+        permissionCode: row.code,
+        roleCode: this.permissionQueryParams.roleCode
+      }
+      turn(data).then((response) => {
+        this.$notify({
+          title: "成功",
+          message: response.data + "权限成功",
+          type: "success",
+          duration: 2000,
+        });
+        this.getPermissionData();
+      });
+    },
     handleDelete(row) {
       console.log(row);
       this.$confirm('是否确认删除角色："' + row.name + '"?', "警告", {
@@ -330,9 +435,21 @@ export default {
         }
       });
     },
+    tableRowClassName({ row, rowIndex }) {
+      if (row.hasThisPermission === true) {
+        return "has-permission-row";
+      }
+      return "";
+    },
   },
 };
 </script>
 
 <style>
+.el-table .has-permission-row {
+  background: #cee0fc;
+}
+.el-table .el-table__header-wrapper .el-checkbox {
+  display: none;
+}
 </style>

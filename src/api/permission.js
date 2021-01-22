@@ -24,10 +24,26 @@ export function save(data) {
   })
 }
 
+export function turn(data) {
+  return request({
+    url: '/security/sec/permission/role/turn',
+    method: 'post',
+    data
+  })
+}
+
 export function update(data) {
   return request({
     url: '/security/sec/permission/update',
     method: 'put',
+    data
+  })
+}
+
+export function findByRoleCode(data) {
+  return request({
+    url: '/security/sec/permission/find/role',
+    method: 'post',
     data
   })
 }
